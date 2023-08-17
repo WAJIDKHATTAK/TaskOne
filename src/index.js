@@ -1,46 +1,42 @@
-//Packages
-const express = require("express");
-const app = express();
-const compression = require("compression");
-const cors = require("cors");
-const path = require("path");
-const httpStatus = require("http-status");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
-const AuthRoutes = require('./Routes/authRoutes');
-const UserRoutes = require('./Routes/userRoutes');
-dotenv.config({ path: "../.env" });
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-
-//Middlewares
-app.use(express.urlencoded({ extended: true }));
-app.use(compression());
-//DB
-const connectDB = require("./Config/dbConfig");
-//Routes
-app.use("/api/v1/users", UserRoutes , AuthRoutes);
-//Connection
-const start = async () => {
-  try {
-    await connectDB();
-    const server = app.listen(process.env.PORT, () => {
-      console.log(`Server is Listening at ${process.env.PORT}...`);
-    });
-
-    // Graceful shutdown
-    process.on("SIGTERM", () => {
-      console.log("Closing server gracefully...");
-      server.close(() => {
-        console.log("Server closed.");
-        process.exit(0);
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+const mongoose = require("mongoose");
+const app = require("./app");
+const config = require("./Config/config");
+const logger = require("./Config/logger");
+const port = config.port || 5000;
+//TODO Connect To MongoDB
+let server;
+mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+	logger.info("Connected to MongoDB");
+	server = app.listen(port, () => {
+		logger.info(`Listening to port ${port}`);
+	});
+});
+//TODO EXIT Handler
+const exitHandler = () => {
+	if (server) {
+		server.close(() => {
+			logger.info("Server Closed");
+			process.exit(1);
+		});
+	} else {
+		process.exit(1);
+	}
 };
 
-start();
+//TODO Handle Unexpected Error
+const unexpectedErrorHandler = (error) => {
+	logger.error(error);
+	exitHandler();
+};
+
+process.on("uncaughtException", unexpectedErrorHandler);
+process.on("unhandledRejection", unexpectedErrorHandler);
+
+process.on("SIGTERM", () => {
+	logger.info("SIGTERM recieved");
+	if (server) {
+		server.close();
+	}
+});
