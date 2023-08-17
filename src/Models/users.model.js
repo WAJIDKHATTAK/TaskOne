@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-useless-escape */
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { toJSON, paginate } = require("./plugins");
+const {roles} = require("./../Config/role")
 const mongoDuplicareKeyError = require("../Utils/mongoDuplicateKeyError");
 
 const userSchema = mongoose.Schema(
@@ -24,6 +23,11 @@ const userSchema = mongoose.Schema(
 			trim: true,
 			lowercase: true,
 		},
+		role: {
+			type: String,
+			enum: roles,
+			default: 'user',
+		},
 		password: {
 			type: String,
 			required: [true, "Please enter password"],
@@ -34,10 +38,6 @@ const userSchema = mongoose.Schema(
 			type: String,
 			required: true,
 			trim: true,
-		},
-		photoPath: {
-			type: String,
-			default: null,
 		},
 	},
 	{

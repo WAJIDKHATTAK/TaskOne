@@ -3,12 +3,17 @@
 const express = require("express");
 const router = express.Router();
 const adminRoute = require("./admin.route");
+const userRoute = require("./user.route");
 
 const defaultRoutes = [
 	{
 		path: "/admin",
 		route: adminRoute,
 	},
+	{
+		path: "/user",
+		route: userRoute,
+	}
 ];
 
 defaultRoutes.forEach((route) => {

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const ApiError = require("../Utils/ApiError");
 const config = require("../Config/config");
 const { Admin } = require("../Models");
+const { roleRights } = require("../Config/role");
 
 const requireSignin = (req, res, next) => {
 	if (req.headers.authorization) {
@@ -26,7 +27,23 @@ const authMiddleware = (req, res, next) => {
 	next();
 };
 
+const restrict = (...requiredRights) => {
+	return (req, res, next) => {
+		if (requiredRights.length) {
+			const userRights = roleRights.get(req.user.role);
+			const hasRequiredRights = requiredRights.every((requiredRight) =>
+				userRights.includes(requiredRight),
+			);
+			if (!hasRequiredRights && req.params.userId !== req.user._id) {
+				throw new ApiError(httpStatus.UNAUTHORIZED, "Forbidden");
+			}
+		}
+		next();
+	};
+};
+
 module.exports = {
 	requireSignin,
 	authMiddleware,
+	restrict
 };
