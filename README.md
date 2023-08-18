@@ -22,8 +22,15 @@ CRUD with express MVC
 
 
 
+"email":"superadmin1@admin.com",
+"password":"adminkite123"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGRmNmViZjFmYWY5NDY1ZjdlNzEwNTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTIzNjQ1MTEsImV4cCI6MTcyMzkyMjExMX0.XbzbQ0vUt-tRot52b_6p6Eczb2el9lRT_qM6YEWF-M8
 
-
+{
+"email":"superadmin2@admin.com",
+"password":"adminkite123"
+}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGRmODEwOGI1ZGI0ZWNkNmYzMzVmYzIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTIzNjkxODYsImV4cCI6MTcyMzkyNjc4Nn0.15Vihh8ipMlkL5mBUU3fdvLrxq_nTPYnvpdr72cDSIw
 
 #Packages :
 

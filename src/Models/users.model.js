@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { toJSON, paginate } = require("./plugins");
-const {roles} = require("./../Config/role")
-const mongoDuplicareKeyError = require("../Utils/mongoDuplicateKeyError");
+const { roles } = require("./../Config/role");
+const mongoDuplicateKeyError = require("../Utils/mongoDuplicateKeyError");
 
 const userSchema = mongoose.Schema(
 	{
@@ -26,13 +26,12 @@ const userSchema = mongoose.Schema(
 		role: {
 			type: String,
 			enum: roles,
-			default: 'user',
+			default: "user",
 		},
 		password: {
 			type: String,
 			required: [true, "Please enter password"],
 			trim: true,
-			private: true, // used by the toJSON plugin
 		},
 		userName: {
 			type: String,
@@ -78,7 +77,7 @@ userSchema.pre("save", async function (next) {
 	next();
 });
 
-mongoDuplicareKeyError(userSchema);
+mongoDuplicateKeyError(userSchema);
 
 /**
  * @typedef User

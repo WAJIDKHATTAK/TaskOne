@@ -13,7 +13,7 @@ const validate = (schema) => (req, res, next) => {
 	const { value, error } = Joi.compile(validSchema)
 		.prefs({ errors: { label: "key" } })
 		.validate(object);
-		console.log(object)
+	console.log(object);
 	if (error) {
 		const errorMessage = error.details
 			.map((details) => details.message)

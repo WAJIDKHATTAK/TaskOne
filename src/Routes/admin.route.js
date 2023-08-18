@@ -1,5 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable no-unused-vars */
 const express = require("express");
 const router = express.Router();
 //? MiddleWares
@@ -18,7 +16,12 @@ const { adminController } = require("../Controllers");
  */
 router
 	.route("/register")
-	.post(validate(adminValidation.register), adminController.register);
+	.post(
+		validate(adminValidation.register),
+		requireSignin,
+		authMiddleware,
+		adminController.register,
+	);
 /**
  * Validate with Joi
  * Controller Function
@@ -27,6 +30,9 @@ router
 	.route("/login")
 	.post(validate(adminValidation.login), adminController.login);
 
+router
+    .route("/addToFavourite/user/:userId/post/:postId")
+	.post(validate(adminValidation.addToFavourite),adminController.addToFavourite);
 /**
  * validate with Joi
  * auth Middleware Functions
@@ -38,7 +44,7 @@ router
 		validate(adminValidation.updatePassword),
 		requireSignin,
 		authMiddleware,
-		adminController.updatePassword
+		adminController.updatePassword,
 	);
 
 module.exports = router;

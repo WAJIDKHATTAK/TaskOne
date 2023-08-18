@@ -9,29 +9,29 @@ const userValidation = require("../Validation/user.validation");
 const { userController } = require("../Controllers");
 
 router
-    .route("/register")
-    .post(
-        validate(userValidation.register),
-        userController.register
-    );
+	.route("/register")
+	.post(validate(userValidation.register), userController.register);
 
 router
-    .route("/login")
-    .post(
-        validate(userValidation.login),
-        userController.login
-    );
+	.route("/login")
+	.post(validate(userValidation.login), userController.login);
 
 router
-    .route("/update/password/:userId")
-    .patch(
-        requireSignin,
-        restrict("manageUsers"),
-        validate(userValidation.updatePassword),
-        userController.updatePassword
-    );
+	.route("/update/password/:userId")
+	.patch(
+		requireSignin,
+		restrict("manageUsers"),
+		validate(userValidation.updatePassword),
+		userController.updatePassword,
+	);
 
-router.route("/").get(requireSignin,validate(userValidation.getAllUsers),userController.getAllUser)
+router
+	.route("/")
+	.get(
+		requireSignin,
+		validate(userValidation.getAllUsers),
+		userController.getAllUsers,
+	);
 
 router
 	.route("/:userId")
@@ -52,6 +52,5 @@ router
 		validate(userValidation.deleteUser),
 		userController.deleteUser,
 	);
-
 
 module.exports = router;

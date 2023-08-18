@@ -45,5 +45,5 @@ const restrict = (...requiredRights) => {
 module.exports = {
 	requireSignin,
 	authMiddleware,
-	restrict
+	restrict,
 };

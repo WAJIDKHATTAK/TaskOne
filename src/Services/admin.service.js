@@ -1,5 +1,3 @@
-/* eslint-disable no-unreachable */
-/* eslint-disable no-unused-vars */
 const httpStatus = require("http-status");
 const { Admin } = require("../Models");
 const ApiError = require("../Utils/ApiError");
@@ -42,6 +40,19 @@ const login = async (userBody) => {
 	return result;
 };
 
+const addToFavourite = async (userId, postId) => {
+	try {
+		console.log(userId,postId);
+		const admin = await Admin.findByIdAndUpdate(
+			userId,
+			{ $addToSet: { favouritebloglist : postId } },
+			{ new: true },
+		);
+		return admin;
+	} catch (error) {
+		throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
+	}
+};
 /**
  * ! update a password
  * ? params //! {userBody , userId}
@@ -66,6 +77,7 @@ const updatePassword = async (body, userId) => {
 			{ new: true },
 		);
 		return updateUser;
+		// console.log(updateUser);
 	} catch (error) {
 		throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
 	}
@@ -74,5 +86,6 @@ const updatePassword = async (body, userId) => {
 module.exports = {
 	register,
 	login,
+	addToFavourite,
 	updatePassword,
 };

@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 const httpStatus = require("http-status");
 const catchAsync = require("../Utils/catchAsync");
 const { userService } = require("../Services");
 const pick = require("../Utils/pick");
+const { objectId } = require("../Validation/custom.validation");
 
 const register = catchAsync(async (req, res) => {
 	let body = req.body;
@@ -18,14 +20,14 @@ const login = catchAsync(async (req, res) => {
 const updatePassword = catchAsync(async (req, res) => {
 	let body = req.body;
 	let userId = req.params.userId;
-	const user = userService.updatePassword(body, userId);
+	const user = await userService.updatePassword(body, userId);
 	res.status(httpStatus.CREATED).send(user);
 });
 
-const getAllUser = catchAsync(async (req, res) => {
+const getAllUsers = catchAsync(async (req, res) => {
 	const filter = pick(req.query, ["username", "role"]);
 	const options = pick(req.query, ["sortBy", "limit", "page"]);
-	const result = await userService.getUser(filter, options);
+	const result = await userService.getAllUsers(filter, options);
 	res.status(httpStatus.CREATED).send(result);
 });
 
@@ -43,9 +45,9 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-	const {userId} = req.params;
-    const user = await userService.deleteUser(userId);
-    res.status(httpStatus.NO_CONTENT).send();
+	const { userId } = req.params;
+	const user = await userService.deleteUser(userId);
+	res.status(httpStatus.NO_CONTENT).send();
 	return user;
 });
 
@@ -53,7 +55,7 @@ module.exports = {
 	register,
 	login,
 	updatePassword,
-	getAllUser,
+	getAllUsers,
 	getUserById,
 	updateUser,
 	deleteUser,

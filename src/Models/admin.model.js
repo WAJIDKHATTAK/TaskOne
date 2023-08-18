@@ -1,8 +1,9 @@
-/* eslint-disable no-unused-vars */
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { toJSON, paginate } = require("./plugins");
-const mongoDuplicareKeyError = require("../Utils/mongoDuplicateKeyError");
+const mongoDuplicateKeyError = require("../Utils/mongoDuplicateKeyError");
+const { roles } = require("../Config/role");
+const Blog = require("./blog.model");
 
 const adminSchema = mongoose.Schema(
 	{
@@ -17,6 +18,19 @@ const adminSchema = mongoose.Schema(
 			required: true,
 			trim: true,
 		},
+		role: {
+			type: String,
+			enum: roles,
+			default: "admin",
+		},
+		mybloglist: {
+			type: mongoose.SchemaTypes.ObjectId,
+			ref: "Blog",
+		},
+		favouritebloglist: {
+			type: mongoose.SchemaTypes.ObjectId,
+			ref: "Blog",
+		},
 	},
 	{
 		timestamps: true,
@@ -27,6 +41,7 @@ const adminSchema = mongoose.Schema(
 adminSchema.plugin(toJSON);
 adminSchema.plugin(paginate);
 
+mongoDuplicateKeyError(adminSchema);
 /**
  * Check if passowrd matches the users's password
  * @params {string} password
@@ -44,8 +59,6 @@ adminSchema.pre("save", async function (next) {
 	}
 	next();
 });
-
-mongoDuplicareKeyError(adminSchema);
 
 /**
  * @type of Admin

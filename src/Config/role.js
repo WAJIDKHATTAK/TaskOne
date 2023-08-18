@@ -1,4 +1,4 @@
-const roles = ["user", "asmin"];
+const roles = ["user", "admin"];
 
 //* User Authorization
 const roleRights = new Map();

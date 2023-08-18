@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-mixed-spaces-and-tabs */
 const express = require("express");
 const router = express.Router();
 const adminRoute = require("./admin.route");
 const userRoute = require("./user.route");
+const blogRoute = require("./blog.route");
 
 const defaultRoutes = [
 	{
@@ -13,6 +12,10 @@ const defaultRoutes = [
 	{
 		path: "/user",
 		route: userRoute,
+	},
+	{
+		path: "/blog",
+		route: blogRoute,
 	}
 ];
 

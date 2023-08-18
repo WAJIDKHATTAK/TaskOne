@@ -104,4 +104,4 @@ module.exports = {
 	verifyToken,
 	generateAuthTokens,
 	checkForces,
-  };
+};

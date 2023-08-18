@@ -1,10 +1,8 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 const httpStatus = require("http-status");
 const { User } = require("../Models");
 const ApiError = require("../Utils/ApiError");
 const generateJwtToken = require("../Config/generateToken");
-const bcrypt = require("bcryptjs");
-const { http } = require("winston");
-const { filter } = require("compression");
 
 const register = async (userBody) => {
 	try {
@@ -26,12 +24,14 @@ const login = async (userBody) => {
 	const result = { token, user };
 	return result;
 };
-const updatePassword = async (userId, body) => {
+const updatePassword = async (body,userId) => {
 	try {
 		let userMember = await User.findById(userId);
 		if (!userMember) {
 			throw new ApiError(httpStatus.BAD_REQUEST, "No user found");
 		}
+		console.log("hello")
+		console.log(userMember);
 		const checkPassword = await userMember.isPasswordMatch(body.password);
 		if (!checkPassword) {
 			throw new ApiError(httpStatus.BAD_REQUEST, "Password invalid");
@@ -43,7 +43,7 @@ const updatePassword = async (userId, body) => {
 		throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
 	}
 };
-const getAllUser = async (filter, options) => {
+const getAllUsers = async (filter, options) => {
 	try {
 		const user = await User.paginate(filter, options);
 		return user;
@@ -62,22 +62,22 @@ const getUserById = async (userId) => {
 		throw new ApiError(httpStatus.BAD_REQUEST, "No User Found");
 	}
 };
-const updateUser = async (body, userId) => {
+const updateUser = async (userId,body) => {
 	try {
-		const user = await User.getUserById(userId);
-		if (body.email && (await User.isEmailTaken(body.email, userId))) {
-			throw new ApiError(httpStatus.BAD_REQUEST, " Email already Taken");
-		}
-		Object.assign(user, body);
-		await user.save();
-		return user;
+		const updateUser = User.findOneAndUpdate(
+			{ _id: userId },
+			{ $set: body },
+			{ new: true }
+		  );
+		//   console.log("updated user : ", updateUser)
+		  return updateUser;
 	} catch (error) {
 		throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
 	}
 };
 const deleteUser = async (userId) => {
 	try {
-		const user = await getUserById({ userId });
+		const user = await getUserById(userId);
 		if (!user) {
 			throw new ApiError(httpStatus.NOT_FOUND, "User Not Found");
 		}
@@ -92,7 +92,7 @@ module.exports = {
 	register,
 	login,
 	updatePassword,
-	getAllUser,
+	getAllUsers,
 	getUserById,
 	updateUser,
 	deleteUser,
