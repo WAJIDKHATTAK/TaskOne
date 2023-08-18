@@ -30,10 +30,12 @@ router
 		[validate(blogValidation.getSingleBlog)],
 		blogController.getSingleBlog,
 	)
+router
+    .route("/delete/blog/:blogId/user/:userId")
 	.delete(
 		requireSignin,
 		authMiddleware,
-		[validate(blogValidation.getSingleBlog)],
+		[validate(blogValidation.deleteBlog)],
 		blogController.deleteBlog,
 	);
 router

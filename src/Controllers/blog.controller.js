@@ -40,8 +40,9 @@ const getSingleBlog = catchAsync(async (req, res) => {
 	res.status(httpStatus.CREATED).send(blog);
 });
 const deleteBlog = catchAsync(async (req, res) => {
-	const { blogId } = req.params;
-	const blog = await blogService.deleteBlog(blogId);
+	const blogId = req.params.blogId;
+	const userId = req.params.userId;
+	const blog = await blogService.deleteBlog(blogId,userId);
 	res.status(httpStatus.CREATED).send(blog);
 });
 const topFourBlogs = catchAsync(async (req, res) => {

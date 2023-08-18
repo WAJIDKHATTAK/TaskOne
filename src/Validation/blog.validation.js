@@ -21,6 +21,12 @@ const updateBlog = {
 	}),
 };
 
+const deleteBlog = {
+	params: Joi.object().keys({
+		blogId: Joi.required().custom(objectId),
+		userId: Joi.required().custom(objectId),
+	})
+}
 const getSingleBlog = {
 	params: Joi.object().keys({
 		blogId: Joi.required().custom(objectId),
@@ -30,5 +36,6 @@ const getSingleBlog = {
 module.exports = {
 	createBlog,
 	updateBlog,
+	deleteBlog,
 	getSingleBlog,
 };

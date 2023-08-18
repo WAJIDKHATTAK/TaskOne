@@ -66,17 +66,32 @@ const getSingleBlog = async (blogId) => {
 	}
 };
 
-const deleteBlog = async (blogId) => {
+const deleteBlog = async (blogId,userId) => {
 	try {
+		// Find and remove the blog
 		const blog = await Blog.findByIdAndRemove(blogId);
 		if (!blog) {
-			throw new ApiError(httpStatus.BAD_REQUEST, "No blog found");
+		  throw new ApiError(httpStatus.BAD_REQUEST, 'No blog found');
 		}
+
+		// Update the user's mybloglist by removing the deleted blog's ID
+		await Admin.findByIdAndUpdate(
+		  userId,
+		  { $pull: { mybloglist: blogId } },
+		  { new: true }
+		);
+
+		// Remove the post ID from the favouritebloglist of all users
+		await Admin.updateMany(
+		  { favouritebloglist: blogId },
+		  { $pull: { favouritebloglist: blogId } }
+		);
+
 		return blog;
-	} catch (error) {
+	  } catch (error) {
 		throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error);
-	}
-};
+	  }
+	};
 
 const topFourBlogs = async () => {
 	try {
